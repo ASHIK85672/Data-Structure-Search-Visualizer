@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Search Algorithm Visualizer</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-content">
+      <p class="tag">DATA STRUCTURE LAB MINI PROJECT</p>
+      <h1>Search Algorithm Visualizer</h1>
+      <p>Learn Linear Search and Binary Search step by step with interactive visualization and C programs.</p>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="card input-card">
+      <h2>Enter Search Data</h2>
+
+      <label for="numbers">Set of numbers</label>
+      <input
+        id="numbers"
+        type="text"
+        value="12, 5, 8, 20, 15, 7, 30"
+        placeholder="Example: 12, 5, 8, 20, 15"
+      />
+
+      <label for="target">Target number</label>
+      <input id="target" type="number" value="15" placeholder="Enter target" />
+
+      <div class="button-row">
+        <button class="primary" onclick="startLinearSearch()">Run Linear Search</button>
+        <button class="secondary" onclick="startBinarySearch()">Run Binary Search</button>
+        <button class="ghost" onclick="resetVisualizer()">Reset</button>
+      </div>
+
+      <p class="note">
+        Binary Search automatically sorts the entered numbers before searching.
+      </p>
+    </section>
+
+    <section class="card">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">VISUALIZATION</p>
+          <h2 id="algorithmTitle">Choose a Search Algorithm</h2>
+        </div>
+        <span id="statusBadge" class="badge neutral">Ready</span>
+      </div>
+
+      <div id="arrayView" class="array-view"></div>
+
+      <div class="controls">
+        <button id="prevBtn" onclick="previousStep()" disabled>Previous</button>
+        <button id="nextBtn" onclick="nextStep()" disabled>Next Step</button>
+        <button id="autoBtn" onclick="autoPlay()" disabled>Auto Play</button>
+      </div>
+
+      <div class="step-box">
+        <h3>Step Explanation</h3>
+        <p id="stepText">Enter values and select Linear Search or Binary Search.</p>
+      </div>
+    </section>
+
+    <section class="info-grid">
+      <article class="card info-card">
+        <h2>Linear Search</h2>
+        <p>
+          Linear Search checks each element one by one from the beginning until the target is found.
+        </p>
+        <div class="complexity">
+          <span>Best: O(1)</span>
+          <span>Worst: O(n)</span>
+        </div>
+        <ol>
+          <li>Start from index 0.</li>
+          <li>Compare the current value with the target.</li>
+          <li>If equal, stop and report the position.</li>
+          <li>Otherwise move to the next value.</li>
+        </ol>
+      </article>
+
+      <article class="card info-card">
+        <h2>Binary Search</h2>
+        <p>
+          Binary Search repeatedly checks the middle value of a sorted array and removes half of the remaining search area.
+        </p>
+        <div class="complexity">
+          <span>Best: O(1)</span>
+          <span>Worst: O(log n)</span>
+        </div>
+        <ol>
+          <li>Sort the array.</li>
+          <li>Find the middle element.</li>
+          <li>Compare the middle value with the target.</li>
+          <li>Continue only in the left or right half.</li>
+        </ol>
+      </article>
+    </section>
+
+    <section class="card c-code-section">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">C PROGRAMS</p>
+          <h2>Reference Code</h2>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab active" onclick="showCode('linear', this)">Linear Search C</button>
+        <button class="tab" onclick="showCode('binary', this)">Binary Search C</button>
+      </div>
+
+      <pre id="linearCode" class="code-block"><code>#include &lt;stdio.h&gt;
+
+int main() {
+    int n, target, i, found = -1;
+
+    printf("Enter number of elements: ");
+    scanf("%d", &amp;n);
+
+    int arr[n];
+
+    printf("Enter %d elements:\n", n);
+    for (i = 0; i &lt; n; i++) {
+        scanf("%d", &amp;arr[i]);
+    }
+
+    printf("Enter element to search: ");
+    scanf("%d", &amp;target);
+
+    for (i = 0; i &lt; n; i++) {
+        printf("Step %d: Comparing %d with %d\n",
+               i + 1, arr[i], target);
+
+        if (arr[i] == target) {
+            found = i;
+            break;
+        }
+    }
+
+    if (found != -1)
+        printf("Element found at index %d\n", found);
+    else
+        printf("Element not found\n");
+
+    return 0;
+}</code></pre>
+
+      <pre id="binaryCode" class="code-block hidden"><code>#include &lt;stdio.h&gt;
+
+void sortArray(int arr[], int n) {
+    int i, j, temp;
+
+    for (i = 0; i &lt; n - 1; i++) {
+        for (j = 0; j &lt; n - i - 1; j++) {
+            if (arr[j] &gt; arr[j + 1]) {
+                temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+            }
+        }
+    }
+}
+
+int main() {
+    int n, target, left, right, mid, i;
+
+    printf("Enter number of elements: ");
+    scanf("%d", &amp;n);
+
+    int arr[n];
+
+    printf("Enter %d elements:\n", n);
+    for (i = 0; i &lt; n; i++) {
+        scanf("%d", &amp;arr[i]);
+    }
+
+    sortArray(arr, n);
+
+    printf("Sorted array: ");
+    for (i = 0; i &lt; n; i++) {
+        printf("%d ", arr[i]);
+    }
+
+    printf("\nEnter element to search: ");
+    scanf("%d", &amp;target);
+
+    left = 0;
+    right = n - 1;
+
+    while (left &lt;= right) {
+        mid = left + (right - left) / 2;
+
+        printf("\nChecking index %d, value = %d\n",
+               mid, arr[mid]);
+
+        if (arr[mid] == target) {
+            printf("Element found at index %d\n", mid);
+            return 0;
+        } else if (arr[mid] &lt; target) {
+            printf("Target is greater. Search right half.\n");
+            left = mid + 1;
+        } else {
+            printf("Target is smaller. Search left half.\n");
+            right = mid - 1;
+        }
+    }
+
+    printf("Element not found\n");
+
+    return 0;
+}</code></pre>
+    </section>
+  </main>
+
+  <footer>
+    <p>Data Structure Lab Mini Project • Linear Search & Binary Search</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
